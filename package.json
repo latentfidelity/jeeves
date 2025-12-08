@@ -1,7 +1,7 @@
 {
   "name": "jeeves",
   "version": "0.1.0",
-  "description": "Discord moderation bot Jeeves",
+  "description": "The open source Discord moderator with AI integration",
   "main": "dist/index.js",
   "type": "commonjs",
   "scripts": {

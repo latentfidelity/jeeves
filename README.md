@@ -1,6 +1,6 @@
 # Jeeves
 
-A Discord moderation bot focused on clear, reliable server controls. Built with TypeScript and discord.js v14.
+The open source Discord moderator with AI integration. Built with TypeScript and discord.js v14.
 
 ## Features
 - Moderation suite: bans/forcebans/softbans/unbans, kicks, timeouts/untimeouts, mass actions, purges, slowmode (with auto-reset), channel lockdowns (with auto-unlock), temporary roles.
