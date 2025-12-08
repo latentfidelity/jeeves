@@ -1,0 +1,14 @@
+node_modules
+.env
+dist
+npm-debug.log*
+yarn-error.log
+data/warnings.json
+data/notes.json
+data/cases.json
+data/appeal.json
+data/infractions.json
+data/config.json
+data/automod.json
+data/schedule.json
+data/jeeves.db
