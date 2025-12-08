@@ -80,4 +80,4 @@ The open source Discord moderator with AI integration. Built with TypeScript and
 - For the moderation log, make sure the bot can post in the configured channel.
 - Data files live under `data/` (warnings, notes, cases); keep them safe if you redeploy.
 - Timeout duration is limited to Discord's 28-day maximum.
-- Commands are role-gated: `Administrator` > `Moderator` > `Helper`; higher roles inherit lower access.
+- Commands are role-gated: `Administrator` > `Moderator` > `Helper`; higher roles inherit lower access. Jeeves also accepts equivalent Discord permissions (e.g., Administrator, Kick Members/Ban Members/Manage Messages) so you can install it on any server without creating specific role names.
