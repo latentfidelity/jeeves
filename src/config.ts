@@ -31,7 +31,7 @@ if (!clientId) {
 
 const openRouter: OpenRouterConfig = {
   apiKey: process.env.OPENROUTER_API_KEY,
-  model: process.env.OPENROUTER_MODEL || 'meta-llama/llama-3.1-8b-instruct:free',
+  model: process.env.OPENROUTER_MODEL || 'meta-llama/llama-3.3-70b-instruct:free',
   siteUrl: process.env.OPENROUTER_SITE_URL,
   appName: process.env.OPENROUTER_APP_NAME,
 };

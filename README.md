@@ -10,7 +10,7 @@ The open source Discord moderator with AI integration. Built with TypeScript and
 - Scheduler: timed slowmode resets, channel unlocks, and temporary role removals.
 - Optional moderation log channel for auditability, including case IDs and optional SQLite logging for actions.
 - File-backed storage under `data/` that persists across restarts.
-- AI copilot: `/ask` command backed by OpenRouter (configurable model).
+- AI copilot: `/ask` command backed by OpenRouter with model selection and credit system for paid models.
 
 ## Requirements
 - Node.js 18 or newer
@@ -27,7 +27,7 @@ The open source Discord moderator with AI integration. Built with TypeScript and
    - `DISCORD_GUILD_ID` - optional; when set, commands register instantly to that guild (recommended for testing). Leave empty to register globally.
    - `MOD_LOG_CHANNEL_ID` - optional; channel ID where Jeeves will post moderation logs
    - `OPENROUTER_API_KEY` - required for the `/ask` command
-   - `OPENROUTER_MODEL` - optional; defaults to `meta-llama/llama-3.1-8b-instruct:free`
+   - `OPENROUTER_MODEL` - optional; defaults to `meta-llama/llama-3.3-70b-instruct:free`
    - `OPENROUTER_SITE_URL` / `OPENROUTER_APP_NAME` - optional attribution headers recommended by OpenRouter
 
 3. Register slash commands with Discord:
@@ -78,12 +78,14 @@ The open source Discord moderator with AI integration. Built with TypeScript and
 - /diagnostics - Check Jeeves' permissions and mod-log configuration in this server.
 - /help - Show this command summary in an embed.
 - /ping - Quick responsiveness check.
-- /ask prompt - Ask the Jeeves AI copilot (OpenRouter-backed, staff-only).
+- /ask prompt model? private? - Ask Jeeves AI (free models available to all; paid models require credits).
+- /credits give|set|check user amount? - Manage AI credits (admin only).
+- /guide - Interactive guide explaining how to use Jeeves AI and the credit system.
 - /report user reason message_link? - Let members report to the mod-log channel.
 - /appeal set|get - Configure or retrieve the server appeal link used in DM notices.
 
 ## Notes
 - For the moderation log, make sure the bot can post in the configured channel.
-- Data files live under data/ (warnings, notes, cases); keep them safe if you redeploy.
+- Data files live under data/ (warnings, notes, cases, credits); keep them safe if you redeploy.
 - Timeout duration is limited to Discord's 28-day maximum.
 - Commands are role-gated: Administrator > Moderator > Helper; higher roles inherit lower access. Jeeves also accepts equivalent Discord permissions (e.g., Administrator, Kick Members/Ban Members/Manage Messages) so you can install it on any server without creating specific role names.
