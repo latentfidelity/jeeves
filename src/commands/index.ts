@@ -12,6 +12,7 @@ import help from './help';
 import report from './report';
 import backup from './backup';
 import configCommand from './config';
+import ai from './ai';
 import automod from './automod';
 import say from './say';
 import note from './note';
@@ -48,6 +49,7 @@ const commands: Command[] = [
   help,
   backup,
   configCommand,
+  ai,
   automod,
   say,
   report,
