@@ -1,4 +1,4 @@
-import { PermissionFlagsBits, SlashCommandBuilder } from 'discord.js';
+import { MessageFlags, PermissionFlagsBits, SlashCommandBuilder } from 'discord.js';
 import { addCase } from '../lib/caseStore';
 import { createActionEmbed, sendModLog } from '../lib/modLog';
 import { removeWarning, getWarnings } from '../lib/warnStore';
@@ -26,7 +26,7 @@ const command: Command = {
   requiredRole: 'moderator',
   async execute(interaction) {
     if (!interaction.guild) {
-      await interaction.reply({ content: 'This command can only be used in a server.', ephemeral: true });
+      await interaction.reply({ content: 'This command can only be used in a server.', flags: MessageFlags.Ephemeral });
       return;
     }
 
@@ -36,21 +36,21 @@ const command: Command = {
 
     const warnings = await getWarnings(interaction.guild.id, user.id);
     if (!warnings.length) {
-      await interaction.reply({ content: `${user.tag} has no warnings.`, ephemeral: true });
+      await interaction.reply({ content: `${user.tag} has no warnings.`, flags: MessageFlags.Ephemeral });
       return;
     }
 
     if (indexInput < 1 || indexInput > warnings.length) {
       await interaction.reply({
         content: `Invalid warning number. ${user.tag} has ${warnings.length} warning(s).`,
-        ephemeral: true,
+        flags: MessageFlags.Ephemeral,
       });
       return;
     }
 
     const result = await removeWarning(interaction.guild.id, user.id, indexInput - 1);
     if (!result.success || !result.removed) {
-      await interaction.reply({ content: 'Failed to remove that warning.', ephemeral: true });
+      await interaction.reply({ content: 'Failed to remove that warning.', flags: MessageFlags.Ephemeral });
       return;
     }
 
@@ -64,7 +64,7 @@ const command: Command = {
 
     await interaction.reply({
       content: `Removed warning #${indexInput} for ${user.tag}. ${result.remaining.length} warning(s) remain. Case #${caseEntry.id}.`,
-      ephemeral: true,
+      flags: MessageFlags.Ephemeral,
     });
 
     const embed = createActionEmbed({

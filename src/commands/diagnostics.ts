@@ -1,4 +1,4 @@
-import { Colors, EmbedBuilder, PermissionFlagsBits, SlashCommandBuilder } from 'discord.js';
+import { Colors, EmbedBuilder, MessageFlags, PermissionFlagsBits, SlashCommandBuilder } from 'discord.js';
 import config from '../config';
 import { getGuildConfig } from '../lib/configStore';
 import { Command } from '../types/Command';
@@ -21,13 +21,13 @@ const command: Command = {
   requiredRole: 'moderator',
   async execute(interaction) {
     if (!interaction.guild) {
-      await interaction.reply({ content: 'This command can only be used in a server.', ephemeral: true });
+      await interaction.reply({ content: 'This command can only be used in a server.', flags: MessageFlags.Ephemeral });
       return;
     }
 
     const me = interaction.guild.members.me;
     if (!me) {
-      await interaction.reply({ content: 'Could not load bot member data.', ephemeral: true });
+      await interaction.reply({ content: 'Could not load bot member data.', flags: MessageFlags.Ephemeral });
       return;
     }
 
@@ -67,7 +67,7 @@ const command: Command = {
       )
       .setTimestamp();
 
-    await interaction.reply({ embeds: [embed], ephemeral: true });
+    await interaction.reply({ embeds: [embed], flags: MessageFlags.Ephemeral });
   },
 };
 

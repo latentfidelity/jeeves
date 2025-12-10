@@ -1,4 +1,4 @@
-import { PermissionFlagsBits, SlashCommandBuilder } from 'discord.js';
+import { MessageFlags, PermissionFlagsBits, SlashCommandBuilder } from 'discord.js';
 import { addCase } from '../lib/caseStore';
 import { createActionEmbed, sendModLog } from '../lib/modLog';
 import { clearWarnings, getWarnings } from '../lib/warnStore';
@@ -19,7 +19,7 @@ const command: Command = {
   requiredRole: 'moderator',
   async execute(interaction) {
     if (!interaction.guild) {
-      await interaction.reply({ content: 'This command can only be used in a server.', ephemeral: true });
+      await interaction.reply({ content: 'This command can only be used in a server.', flags: MessageFlags.Ephemeral });
       return;
     }
 
@@ -37,7 +37,7 @@ const command: Command = {
       context: { cleared: existing.length.toString() },
     });
 
-    await interaction.reply({ content: `Cleared ${existing.length} warning(s) for ${user.tag}. Case #${caseEntry.id}.`, ephemeral: true });
+    await interaction.reply({ content: `Cleared ${existing.length} warning(s) for ${user.tag}. Case #${caseEntry.id}.`, flags: MessageFlags.Ephemeral });
 
     const embed = createActionEmbed({
       action: 'Clear Warnings',

@@ -1,4 +1,4 @@
-import { SlashCommandBuilder } from 'discord.js';
+import { MessageFlags, SlashCommandBuilder } from 'discord.js';
 import { Command } from '../types/Command';
 import config from '../config';
 import { runOpenRouterChat } from '../lib/openrouter';
@@ -60,7 +60,7 @@ const command: Command = {
     .setDMPermission(false),
   async execute(interaction) {
     if (!interaction.guild) {
-      await interaction.reply({ content: 'This command can only be used in a server.', ephemeral: true });
+      await interaction.reply({ content: 'This command can only be used in a server.', flags: MessageFlags.Ephemeral });
       return;
     }
 
@@ -73,7 +73,7 @@ const command: Command = {
     if (!config.openRouter.apiKey) {
       await interaction.reply({
         content: 'OpenRouter is not configured. Ask an admin to set OPENROUTER_API_KEY.',
-        ephemeral: true,
+        flags: MessageFlags.Ephemeral,
       });
       return;
     }
@@ -87,13 +87,13 @@ const command: Command = {
       if (balance <= 0) {
         await interaction.reply({
           content: `You need credits to use paid models. Your balance: **0 credits**.\nUse a free model or ask an admin for credits.`,
-          ephemeral: true,
+          flags: MessageFlags.Ephemeral,
         });
         return;
       }
     }
 
-    await interaction.deferReply({ ephemeral: isPrivate });
+    await interaction.deferReply({ flags: isPrivate ? MessageFlags.Ephemeral : undefined });
 
     try {
       const result = await runOpenRouterChat(prompt, {

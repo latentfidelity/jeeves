@@ -1,4 +1,4 @@
-import { GuildMember, PermissionFlagsBits, Role, SlashCommandBuilder } from 'discord.js';
+import { GuildMember, MessageFlags, PermissionFlagsBits, Role, SlashCommandBuilder } from 'discord.js';
 import { addCase } from '../lib/caseStore';
 import { createActionEmbed, sendModLog } from '../lib/modLog';
 import { Command } from '../types/Command';
@@ -48,7 +48,7 @@ const command: Command = {
   requiredRole: 'moderator',
   async execute(interaction) {
     if (!interaction.guild) {
-      await interaction.reply({ content: 'This command can only be used in a server.', ephemeral: true });
+      await interaction.reply({ content: 'This command can only be used in a server.', flags: MessageFlags.Ephemeral });
       return;
     }
 
@@ -59,23 +59,23 @@ const command: Command = {
 
     const member = await interaction.guild.members.fetch(user.id).catch(() => null);
     if (!member) {
-      await interaction.reply({ content: 'User not found in this server.', ephemeral: true });
+      await interaction.reply({ content: 'User not found in this server.', flags: MessageFlags.Ephemeral });
       return;
     }
 
     if (!await ensureManageable(member)) {
-      await interaction.reply({ content: 'I cannot modify that member. They may have higher permissions or roles.', ephemeral: true });
+      await interaction.reply({ content: 'I cannot modify that member. They may have higher permissions or roles.', flags: MessageFlags.Ephemeral });
       return;
     }
 
     if (!isRoleEditable(role)) {
-      await interaction.reply({ content: 'I cannot modify that role. It may be higher than my highest role or is managed.', ephemeral: true });
+      await interaction.reply({ content: 'I cannot modify that role. It may be higher than my highest role or is managed.', flags: MessageFlags.Ephemeral });
       return;
     }
 
     if (sub === 'add') {
       if (member.roles.cache.has(role.id)) {
-        await interaction.reply({ content: `${user.tag} already has ${role.name}.`, ephemeral: true });
+        await interaction.reply({ content: `${user.tag} already has ${role.name}.`, flags: MessageFlags.Ephemeral });
         return;
       }
 
@@ -89,7 +89,7 @@ const command: Command = {
         context: { role: role.id },
       });
 
-      await interaction.reply({ content: `Added ${role.name} to ${user.tag}. Case #${caseEntry.id}.`, ephemeral: true });
+      await interaction.reply({ content: `Added ${role.name} to ${user.tag}. Case #${caseEntry.id}.`, flags: MessageFlags.Ephemeral });
 
       const embed = createActionEmbed({
         action: 'Role Added',
@@ -107,7 +107,7 @@ const command: Command = {
 
     if (sub === 'remove') {
       if (!member.roles.cache.has(role.id)) {
-        await interaction.reply({ content: `${user.tag} does not have ${role.name}.`, ephemeral: true });
+        await interaction.reply({ content: `${user.tag} does not have ${role.name}.`, flags: MessageFlags.Ephemeral });
         return;
       }
 
@@ -121,7 +121,7 @@ const command: Command = {
         context: { role: role.id },
       });
 
-      await interaction.reply({ content: `Removed ${role.name} from ${user.tag}. Case #${caseEntry.id}.`, ephemeral: true });
+      await interaction.reply({ content: `Removed ${role.name} from ${user.tag}. Case #${caseEntry.id}.`, flags: MessageFlags.Ephemeral });
 
       const embed = createActionEmbed({
         action: 'Role Removed',
@@ -137,7 +137,7 @@ const command: Command = {
       return;
     }
 
-    await interaction.reply({ content: 'Unknown subcommand.', ephemeral: true });
+    await interaction.reply({ content: 'Unknown subcommand.', flags: MessageFlags.Ephemeral });
   },
 };
 

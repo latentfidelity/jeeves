@@ -1,4 +1,4 @@
-import { PermissionFlagsBits, SlashCommandBuilder } from 'discord.js';
+import { MessageFlags, PermissionFlagsBits, SlashCommandBuilder } from 'discord.js';
 import { addCase } from '../lib/caseStore';
 import { createActionEmbed, sendModLog } from '../lib/modLog';
 import { addNote, clearNotes, getNotes } from '../lib/noteStore';
@@ -44,7 +44,7 @@ const command: Command = {
   requiredRole: 'moderator',
   async execute(interaction) {
     if (!interaction.guild) {
-      await interaction.reply({ content: 'This command can only be used in a server.', ephemeral: true });
+      await interaction.reply({ content: 'This command can only be used in a server.', flags: MessageFlags.Ephemeral });
       return;
     }
 
@@ -69,7 +69,7 @@ const command: Command = {
 
       await interaction.reply({
         content: `Added note for ${user.tag}. They now have ${notes.length} note(s). Case #${caseEntry.id}.`,
-        ephemeral: true,
+        flags: MessageFlags.Ephemeral,
       });
 
       const embed = createActionEmbed({
@@ -93,7 +93,7 @@ const command: Command = {
     if (subcommand === 'list') {
       const notes = await getNotes(interaction.guild.id, user.id);
       if (!notes.length) {
-        await interaction.reply({ content: `${user.tag} has no notes.`, ephemeral: true });
+        await interaction.reply({ content: `${user.tag} has no notes.`, flags: MessageFlags.Ephemeral });
         return;
       }
 
@@ -106,7 +106,7 @@ const command: Command = {
 
       await interaction.reply({
         content: `Notes for ${user.tag}:\n${description}`,
-        ephemeral: true,
+        flags: MessageFlags.Ephemeral,
       });
       return;
     }
@@ -125,7 +125,7 @@ const command: Command = {
 
       await interaction.reply({
         content: `Cleared ${notes.length} note(s) for ${user.tag}. Case #${caseEntry.id}.`,
-        ephemeral: true,
+        flags: MessageFlags.Ephemeral,
       });
 
       const embed = createActionEmbed({
@@ -143,7 +143,7 @@ const command: Command = {
       return;
     }
 
-    await interaction.reply({ content: 'Unknown subcommand.', ephemeral: true });
+    await interaction.reply({ content: 'Unknown subcommand.', flags: MessageFlags.Ephemeral });
   },
 };
 

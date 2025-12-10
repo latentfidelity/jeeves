@@ -1,4 +1,4 @@
-import { PermissionFlagsBits, SlashCommandBuilder } from 'discord.js';
+import { MessageFlags, PermissionFlagsBits, SlashCommandBuilder } from 'discord.js';
 import { addCase } from '../lib/caseStore';
 import { createActionEmbed, sendModLog } from '../lib/modLog';
 import { tryNotifyUser } from '../lib/notify';
@@ -26,7 +26,7 @@ const command: Command = {
   requiredRole: 'moderator',
   async execute(interaction) {
     if (!interaction.guild) {
-      await interaction.reply({ content: 'This command can only be used in a server.', ephemeral: true });
+      await interaction.reply({ content: 'This command can only be used in a server.', flags: MessageFlags.Ephemeral });
       return;
     }
 
@@ -59,7 +59,7 @@ const command: Command = {
 
     await interaction.reply({
       content: `Warned ${user.tag}. They now have ${warnings.length} warning(s). Case #${caseEntry.id}.`,
-      ephemeral: true,
+      flags: MessageFlags.Ephemeral,
     });
 
     const embed = createActionEmbed({

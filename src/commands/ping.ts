@@ -1,4 +1,4 @@
-import { SlashCommandBuilder } from 'discord.js';
+import { MessageFlags, SlashCommandBuilder } from 'discord.js';
 import { Command } from '../types/Command';
 
 const command: Command = {
@@ -6,10 +6,10 @@ const command: Command = {
   requiredRole: 'helper',
   async execute(interaction) {
     const start = Date.now();
-    await interaction.reply({ content: 'Pong!', ephemeral: true });
+    await interaction.reply({ content: 'Pong!', flags: MessageFlags.Ephemeral });
     const end = Date.now();
     const latency = end - start;
-    await interaction.followUp({ content: `Latency: ${latency}ms`, ephemeral: true });
+    await interaction.followUp({ content: `Latency: ${latency}ms`, flags: MessageFlags.Ephemeral });
   },
 };
 

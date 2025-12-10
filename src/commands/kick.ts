@@ -1,4 +1,4 @@
-import { PermissionFlagsBits, SlashCommandBuilder } from 'discord.js';
+import { MessageFlags, PermissionFlagsBits, SlashCommandBuilder } from 'discord.js';
 import { addCase } from '../lib/caseStore';
 import { tryNotifyUser } from '../lib/notify';
 import { createActionEmbed, sendModLog } from '../lib/modLog';
@@ -24,7 +24,7 @@ const command: Command = {
   requiredRole: 'moderator',
   async execute(interaction) {
     if (!interaction.guild) {
-      await interaction.reply({ content: 'This command can only be used in a server.', ephemeral: true });
+      await interaction.reply({ content: 'This command can only be used in a server.', flags: MessageFlags.Ephemeral });
       return;
     }
 
@@ -32,18 +32,18 @@ const command: Command = {
     const reason = interaction.options.getString('reason') || 'No reason provided';
 
     if (user.id === interaction.user.id) {
-      await interaction.reply({ content: "You can't kick yourself.", ephemeral: true });
+      await interaction.reply({ content: "You can't kick yourself.", flags: MessageFlags.Ephemeral });
       return;
     }
 
     const member = await interaction.guild.members.fetch(user.id).catch(() => null);
     if (!member) {
-      await interaction.reply({ content: 'User not found in this server.', ephemeral: true });
+      await interaction.reply({ content: 'User not found in this server.', flags: MessageFlags.Ephemeral });
       return;
     }
 
     if (!member.kickable) {
-      await interaction.reply({ content: 'I cannot kick that member. They may have higher permissions or roles.', ephemeral: true });
+      await interaction.reply({ content: 'I cannot kick that member. They may have higher permissions or roles.', flags: MessageFlags.Ephemeral });
       return;
     }
 
@@ -65,7 +65,7 @@ const command: Command = {
       context: { dm: dmSent ? 'sent' : 'failed' },
     });
 
-    await interaction.reply({ content: `Kicked ${user.tag}. Case #${caseEntry.id}.`, ephemeral: true });
+    await interaction.reply({ content: `Kicked ${user.tag}. Case #${caseEntry.id}.`, flags: MessageFlags.Ephemeral });
 
     const embed = createActionEmbed({
       action: 'Kick',

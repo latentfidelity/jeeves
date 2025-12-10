@@ -1,4 +1,4 @@
-import { AttachmentBuilder, PermissionFlagsBits, SlashCommandBuilder } from 'discord.js';
+import { AttachmentBuilder, MessageFlags, PermissionFlagsBits, SlashCommandBuilder } from 'discord.js';
 import { buildBackupBuffer } from '../lib/backup';
 import { Command } from '../types/Command';
 
@@ -11,11 +11,11 @@ const command: Command = {
   requiredRole: 'administrator',
   async execute(interaction) {
     if (!interaction.guild) {
-      await interaction.reply({ content: 'This command can only be used in a server.', ephemeral: true });
+      await interaction.reply({ content: 'This command can only be used in a server.', flags: MessageFlags.Ephemeral });
       return;
     }
 
-    await interaction.deferReply({ ephemeral: true });
+    await interaction.deferReply({ flags: MessageFlags.Ephemeral });
 
     const buffer = await buildBackupBuffer();
     const attachment = new AttachmentBuilder(buffer, { name: `jeeves-backup-${Date.now()}.json` });

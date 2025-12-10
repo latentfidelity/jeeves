@@ -1,4 +1,4 @@
-import { PermissionFlagsBits, SlashCommandBuilder } from 'discord.js';
+import { MessageFlags, PermissionFlagsBits, SlashCommandBuilder } from 'discord.js';
 import { addCase } from '../lib/caseStore';
 import { createActionEmbed, sendModLog } from '../lib/modLog';
 import { Command } from '../types/Command';
@@ -33,7 +33,7 @@ const command: Command = {
   requiredRole: 'moderator',
   async execute(interaction) {
     if (!interaction.guild) {
-      await interaction.reply({ content: 'This command can only be used in a server.', ephemeral: true });
+      await interaction.reply({ content: 'This command can only be used in a server.', flags: MessageFlags.Ephemeral });
       return;
     }
 
@@ -43,18 +43,18 @@ const command: Command = {
     const reason = interaction.options.getString('reason') || 'No reason provided';
 
     if (nickname && reset) {
-      await interaction.reply({ content: 'Provide a nickname or set reset=true, not both.', ephemeral: true });
+      await interaction.reply({ content: 'Provide a nickname or set reset=true, not both.', flags: MessageFlags.Ephemeral });
       return;
     }
 
     const member = await interaction.guild.members.fetch(user.id).catch(() => null);
     if (!member) {
-      await interaction.reply({ content: 'User not found in this server.', ephemeral: true });
+      await interaction.reply({ content: 'User not found in this server.', flags: MessageFlags.Ephemeral });
       return;
     }
 
     if (!member.manageable) {
-      await interaction.reply({ content: 'I cannot modify that member. They may have higher permissions or roles.', ephemeral: true });
+      await interaction.reply({ content: 'I cannot modify that member. They may have higher permissions or roles.', flags: MessageFlags.Ephemeral });
       return;
     }
 
@@ -73,7 +73,7 @@ const command: Command = {
       content: reset
         ? `Reset nickname for ${user.tag}. Case #${caseEntry.id}.`
         : `Changed nickname for ${user.tag} to "${nickname}". Case #${caseEntry.id}.`,
-      ephemeral: true,
+      flags: MessageFlags.Ephemeral,
     });
 
     const embed = createActionEmbed({

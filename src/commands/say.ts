@@ -1,4 +1,4 @@
-import { ChannelType, PermissionFlagsBits, SlashCommandBuilder, TextBasedChannel } from 'discord.js';
+import { ChannelType, MessageFlags, PermissionFlagsBits, SlashCommandBuilder, TextBasedChannel } from 'discord.js';
 import { Command } from '../types/Command';
 
 const MAX_MESSAGE_LENGTH = 2000;
@@ -35,7 +35,7 @@ const command: Command = {
   requiredRole: 'administrator',
   async execute(interaction) {
     if (!interaction.guild) {
-      await interaction.reply({ content: 'This command can only be used in a server.', ephemeral: true });
+      await interaction.reply({ content: 'This command can only be used in a server.', flags: MessageFlags.Ephemeral });
       return;
     }
 
@@ -47,7 +47,7 @@ const command: Command = {
     const allowMentions = interaction.options.getBoolean('allow_mentions') ?? false;
 
     if (!target) {
-      await interaction.reply({ content: 'Please choose a text channel or thread.', ephemeral: true });
+      await interaction.reply({ content: 'Please choose a text channel or thread.', flags: MessageFlags.Ephemeral });
       return;
     }
 
@@ -58,7 +58,7 @@ const command: Command = {
 
     await interaction.reply({
       content: `Sent message to ${target}.`,
-      ephemeral: true,
+      flags: MessageFlags.Ephemeral,
     });
   },
 };

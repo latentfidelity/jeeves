@@ -1,4 +1,4 @@
-import { ChannelType, PermissionFlagsBits, SlashCommandBuilder, TextChannel } from 'discord.js';
+import { ChannelType, MessageFlags, PermissionFlagsBits, SlashCommandBuilder, TextChannel } from 'discord.js';
 import { addCase } from '../lib/caseStore';
 import { parseDuration, formatDuration } from '../lib/duration';
 import { createActionEmbed, sendModLog } from '../lib/modLog';
@@ -43,7 +43,7 @@ const command: Command = {
   requiredRole: 'moderator',
   async execute(interaction) {
     if (!interaction.guild) {
-      await interaction.reply({ content: 'This command can only be used in a server.', ephemeral: true });
+      await interaction.reply({ content: 'This command can only be used in a server.', flags: MessageFlags.Ephemeral });
       return;
     }
 
@@ -57,7 +57,7 @@ const command: Command = {
     const durationMs = durationInput ? parseDuration(durationInput) : null;
 
     if (!targetChannel || !isLockableChannel(targetChannel)) {
-      await interaction.reply({ content: 'Lockdown can only be used on text channels.', ephemeral: true });
+      await interaction.reply({ content: 'Lockdown can only be used on text channels.', flags: MessageFlags.Ephemeral });
       return;
     }
 
@@ -70,7 +70,7 @@ const command: Command = {
 
     if (lock && durationInput) {
       if (!durationMs) {
-        await interaction.reply({ content: 'Invalid duration. Use values like 30m or 1h.', ephemeral: true });
+        await interaction.reply({ content: 'Invalid duration. Use values like 30m or 1h.', flags: MessageFlags.Ephemeral });
         return;
       }
       const runAt = Date.now() + durationMs;
@@ -97,7 +97,7 @@ const command: Command = {
       content: lock
         ? `Locked ${targetChannel} for @everyone. Case #${caseEntry.id}.`
         : `Unlocked ${targetChannel} for @everyone. Case #${caseEntry.id}.`,
-      ephemeral: true,
+      flags: MessageFlags.Ephemeral,
     });
 
     const embed = createActionEmbed({

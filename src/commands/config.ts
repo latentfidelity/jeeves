@@ -1,4 +1,4 @@
-import { ChannelType, PermissionFlagsBits, SlashCommandBuilder } from 'discord.js';
+import { ChannelType, MessageFlags, PermissionFlagsBits, SlashCommandBuilder } from 'discord.js';
 import { getGuildConfig, setDmActionsEnabled, setIncludeAppealInDm, setModLogChannel } from '../lib/configStore';
 import { Command } from '../types/Command';
 
@@ -39,7 +39,7 @@ const command: Command = {
   requiredRole: 'administrator',
   async execute(interaction) {
     if (!interaction.guild) {
-      await interaction.reply({ content: 'This command can only be used in a server.', ephemeral: true });
+      await interaction.reply({ content: 'This command can only be used in a server.', flags: MessageFlags.Ephemeral });
       return;
     }
 
@@ -52,7 +52,7 @@ const command: Command = {
         content: channel
           ? `Mod-log channel set to ${channel}.`
           : 'Mod-log channel cleared (falls back to MOD_LOG_CHANNEL_ID env if set).',
-        ephemeral: true,
+        flags: MessageFlags.Ephemeral,
       });
       return;
     }
@@ -62,7 +62,7 @@ const command: Command = {
       const updated = await setDmActionsEnabled(interaction.guild.id, enabled);
       await interaction.reply({
         content: `DMs for actions are now ${enabled ? 'enabled' : 'disabled'}.`,
-        ephemeral: true,
+        flags: MessageFlags.Ephemeral,
       });
       return;
     }
@@ -72,7 +72,7 @@ const command: Command = {
       await setIncludeAppealInDm(interaction.guild.id, enabled);
       await interaction.reply({
         content: `Including appeal links in DMs is now ${enabled ? 'enabled' : 'disabled'}.`,
-        ephemeral: true,
+        flags: MessageFlags.Ephemeral,
       });
       return;
     }
@@ -85,12 +85,12 @@ const command: Command = {
           `DM actions: ${cfg.dmActions !== false ? 'enabled' : 'disabled'}`,
           `Appeal links in DMs: ${cfg.includeAppealInDm !== false ? 'enabled' : 'disabled'}`,
         ].join('\n'),
-        ephemeral: true,
+        flags: MessageFlags.Ephemeral,
       });
       return;
     }
 
-    await interaction.reply({ content: 'Unknown subcommand.', ephemeral: true });
+    await interaction.reply({ content: 'Unknown subcommand.', flags: MessageFlags.Ephemeral });
   },
 };
 

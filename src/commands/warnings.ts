@@ -1,4 +1,4 @@
-import { PermissionFlagsBits, SlashCommandBuilder } from 'discord.js';
+import { MessageFlags, PermissionFlagsBits, SlashCommandBuilder } from 'discord.js';
 import { getWarnings } from '../lib/warnStore';
 import { Command } from '../types/Command';
 
@@ -14,7 +14,7 @@ const command: Command = {
   requiredRole: 'helper',
   async execute(interaction) {
     if (!interaction.guild) {
-      await interaction.reply({ content: 'This command can only be used in a server.', ephemeral: true });
+      await interaction.reply({ content: 'This command can only be used in a server.', flags: MessageFlags.Ephemeral });
       return;
     }
 
@@ -22,7 +22,7 @@ const command: Command = {
     const warnings = await getWarnings(interaction.guild.id, user.id);
 
     if (!warnings.length) {
-      await interaction.reply({ content: `${user.tag} has no warnings.`, ephemeral: true });
+      await interaction.reply({ content: `${user.tag} has no warnings.`, flags: MessageFlags.Ephemeral });
       return;
     }
 
@@ -35,7 +35,7 @@ const command: Command = {
 
     await interaction.reply({
       content: `Warnings for ${user.tag}:\n${description}`,
-      ephemeral: true,
+      flags: MessageFlags.Ephemeral,
     });
   },
 };

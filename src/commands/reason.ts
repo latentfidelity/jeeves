@@ -1,4 +1,4 @@
-import { PermissionFlagsBits, SlashCommandBuilder } from 'discord.js';
+import { MessageFlags, PermissionFlagsBits, SlashCommandBuilder } from 'discord.js';
 import { getCase, updateCase } from '../lib/caseStore';
 import { createActionEmbed, sendModLog } from '../lib/modLog';
 import { Command } from '../types/Command';
@@ -24,7 +24,7 @@ const command: Command = {
   requiredRole: 'moderator',
   async execute(interaction) {
     if (!interaction.guild) {
-      await interaction.reply({ content: 'This command can only be used in a server.', ephemeral: true });
+      await interaction.reply({ content: 'This command can only be used in a server.', flags: MessageFlags.Ephemeral });
       return;
     }
 
@@ -33,17 +33,17 @@ const command: Command = {
 
     const existing = await getCase(caseId);
     if (!existing) {
-      await interaction.reply({ content: `No case found with ID #${caseId}.`, ephemeral: true });
+      await interaction.reply({ content: `No case found with ID #${caseId}.`, flags: MessageFlags.Ephemeral });
       return;
     }
 
     const updated = await updateCase(caseId, { reason: newReason, context: { reasonUpdatedBy: interaction.user.id } });
     if (!updated) {
-      await interaction.reply({ content: 'Failed to update the case.', ephemeral: true });
+      await interaction.reply({ content: 'Failed to update the case.', flags: MessageFlags.Ephemeral });
       return;
     }
 
-    await interaction.reply({ content: `Updated reason for case #${caseId}.`, ephemeral: true });
+    await interaction.reply({ content: `Updated reason for case #${caseId}.`, flags: MessageFlags.Ephemeral });
 
     const embed = createActionEmbed({
       action: 'Case Reason Updated',

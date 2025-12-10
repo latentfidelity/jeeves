@@ -1,4 +1,4 @@
-import { Client, Events, GatewayIntentBits } from 'discord.js';
+import { Client, Events, GatewayIntentBits, MessageFlags } from 'discord.js';
 import commands from './commands';
 import config from './config';
 import { handleAutomodMessage } from './lib/automod';
@@ -26,7 +26,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
   const command = commandMap.get(interaction.commandName);
 
   if (!command) {
-    await interaction.reply({ content: 'Unknown command.', ephemeral: true });
+    await interaction.reply({ content: 'Unknown command.', flags: MessageFlags.Ephemeral });
     return;
   }
 
@@ -40,9 +40,9 @@ client.on(Events.InteractionCreate, async (interaction) => {
     console.error(`Error handling command ${interaction.commandName}`, error);
     const message = 'Something went wrong while executing that command.';
     if (interaction.deferred || interaction.replied) {
-      await interaction.followUp({ content: message, ephemeral: true });
+      await interaction.followUp({ content: message, flags: MessageFlags.Ephemeral });
     } else {
-      await interaction.reply({ content: message, ephemeral: true });
+      await interaction.reply({ content: message, flags: MessageFlags.Ephemeral });
     }
   }
 });
