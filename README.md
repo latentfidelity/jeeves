@@ -10,7 +10,7 @@ The open source Discord moderator with AI integration. Built with TypeScript and
 - Scheduler: timed slowmode resets, channel unlocks, and temporary role removals.
 - Optional moderation log channel for auditability, including case IDs and optional SQLite logging for actions.
 - File-backed storage under `data/` that persists across restarts.
-- AI copilot: `/ai` command backed by OpenRouter (configurable model).
+- AI copilot: `/ask` command backed by OpenRouter (configurable model).
 
 ## Requirements
 - Node.js 18 or newer
@@ -21,12 +21,12 @@ The open source Discord moderator with AI integration. Built with TypeScript and
    ```bash
    npm install
    ```
-2. Copy `.env.example` to `.env` and fill in your values:
+2. Create a `.env` file and fill in your values:
    - `DISCORD_TOKEN` - your bot token (or `BOT_TOKEN` if your host uses that name)
    - `DISCORD_CLIENT_ID` - application ID for the bot
    - `DISCORD_GUILD_ID` - optional; when set, commands register instantly to that guild (recommended for testing). Leave empty to register globally.
    - `MOD_LOG_CHANNEL_ID` - optional; channel ID where Jeeves will post moderation logs
-   - `OPENROUTER_API_KEY` - required for the `/ai` command
+   - `OPENROUTER_API_KEY` - required for the `/ask` command
    - `OPENROUTER_MODEL` - optional; defaults to `meta-llama/llama-3.1-8b-instruct:free`
    - `OPENROUTER_SITE_URL` / `OPENROUTER_APP_NAME` - optional attribution headers recommended by OpenRouter
 
@@ -78,7 +78,7 @@ The open source Discord moderator with AI integration. Built with TypeScript and
 - /diagnostics - Check Jeeves' permissions and mod-log configuration in this server.
 - /help - Show this command summary in an embed.
 - /ping - Quick responsiveness check.
-- /ai prompt - Ask the Jeeves AI copilot (OpenRouter-backed, staff-only).
+- /ask prompt - Ask the Jeeves AI copilot (OpenRouter-backed, staff-only).
 - /report user reason message_link? - Let members report to the mod-log channel.
 - /appeal set|get - Configure or retrieve the server appeal link used in DM notices.
 

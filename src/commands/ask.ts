@@ -7,8 +7,8 @@ const MAX_PROMPT_LENGTH = 800;
 
 const command: Command = {
   data: new SlashCommandBuilder()
-    .setName('ai')
-    .setDescription('Ask Jeeves AI (OpenRouter)')
+    .setName('ask')
+    .setDescription('Ask Jeeves (OpenRouter)')
     .addStringOption((option) =>
       option
         .setName('prompt')
