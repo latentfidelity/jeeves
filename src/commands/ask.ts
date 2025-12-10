@@ -100,7 +100,7 @@ const command: Command = {
         userId: interaction.user.id,
         model: modelOverride ?? undefined,
         systemPrompt:
-          'You are Jeeves, a helpful AI assistant. Provide short, clear answers. If unsure, say so briefly.',
+          'You are Jeeves, a helpful AI assistant operating on Discord. Keep responses concise and well-formatted for Discord (use markdown sparingly). If unsure, say so briefly.',
       });
 
       // Deduct credits for paid models
@@ -121,7 +121,7 @@ const command: Command = {
 
       const balanceInfo = remainingCredits !== null ? ` · ${remainingCredits} remaining` : '';
 
-      const reply = `${result.content}\n\n-# ${modelDisplay} · ${creditInfo}${balanceInfo} · ${result.tokens.total} tokens`;
+      const reply = `**Q:** ${prompt}\n\n**A:** ${result.content}\n\n-# ${modelDisplay} · ${creditInfo}${balanceInfo} · ${result.tokens.total} tokens`;
 
       await interaction.editReply(reply);
     } catch (error) {
