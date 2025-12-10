@@ -4,6 +4,7 @@ import {
   ButtonStyle,
   ComponentType,
   EmbedBuilder,
+  MessageFlags,
   SlashCommandBuilder,
 } from 'discord.js';
 import { Command } from '../types/Command';
@@ -147,7 +148,7 @@ const command: Command = {
     const response = await interaction.reply({
       embeds: [buildEmbed(currentPage)],
       components: [buildButtons(currentPage)],
-      ephemeral: true,
+      flags: MessageFlags.Ephemeral,
     });
 
     const collector = response.createMessageComponentCollector({
@@ -157,7 +158,7 @@ const command: Command = {
 
     collector.on('collect', async (i) => {
       if (i.user.id !== interaction.user.id) {
-        await i.reply({ content: 'This guide is not for you.', ephemeral: true });
+        await i.reply({ content: 'This guide is not for you.', flags: MessageFlags.Ephemeral });
         return;
       }
 

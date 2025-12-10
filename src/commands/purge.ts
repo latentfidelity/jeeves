@@ -1,4 +1,4 @@
-import { NewsChannel, PermissionFlagsBits, SlashCommandBuilder, TextChannel, ThreadChannel } from 'discord.js';
+import { MessageFlags, NewsChannel, PermissionFlagsBits, SlashCommandBuilder, TextChannel, ThreadChannel } from 'discord.js';
 import { addCase } from '../lib/caseStore';
 import { createActionEmbed, sendModLog } from '../lib/modLog';
 import { Command } from '../types/Command';
@@ -32,13 +32,13 @@ const command: Command = {
   requiredRole: 'moderator',
   async execute(interaction) {
     if (!interaction.guild) {
-      await interaction.reply({ content: 'This command can only be used in a server.', ephemeral: true });
+      await interaction.reply({ content: 'This command can only be used in a server.', flags: MessageFlags.Ephemeral });
       return;
     }
 
     const channel = interaction.channel;
     if (!channel || !channel.isTextBased() || !isBulkDeletableChannel(channel)) {
-      await interaction.reply({ content: 'This command must be used in a text channel.', ephemeral: true });
+      await interaction.reply({ content: 'This command must be used in a text channel.', flags: MessageFlags.Ephemeral });
       return;
     }
 
@@ -52,7 +52,7 @@ const command: Command = {
       : fetched.first(count);
 
     if (!toDelete || toDelete.length === 0) {
-      await interaction.reply({ content: 'No messages found to delete with the given filters.', ephemeral: true });
+      await interaction.reply({ content: 'No messages found to delete with the given filters.', flags: MessageFlags.Ephemeral });
       return;
     }
 
@@ -72,7 +72,7 @@ const command: Command = {
 
     await interaction.reply({
       content: `Deleted ${deleted.size} message(s)${targetUser ? ` from ${targetUser.tag}` : ''}. Case #${caseEntry.id}.`,
-      ephemeral: true,
+      flags: MessageFlags.Ephemeral,
     });
 
     const embed = createActionEmbed({

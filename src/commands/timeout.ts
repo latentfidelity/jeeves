@@ -1,4 +1,4 @@
-import { PermissionFlagsBits, SlashCommandBuilder } from 'discord.js';
+import { MessageFlags, PermissionFlagsBits, SlashCommandBuilder } from 'discord.js';
 import { addCase } from '../lib/caseStore';
 import { parseDuration, formatDuration, MAX_TIMEOUT_MS } from '../lib/duration';
 import { createActionEmbed, sendModLog } from '../lib/modLog';
@@ -31,7 +31,7 @@ const command: Command = {
   requiredRole: 'moderator',
   async execute(interaction) {
     if (!interaction.guild) {
-      await interaction.reply({ content: 'This command can only be used in a server.', ephemeral: true });
+      await interaction.reply({ content: 'This command can only be used in a server.', flags: MessageFlags.Ephemeral });
       return;
     }
 
@@ -40,29 +40,29 @@ const command: Command = {
     const reason = interaction.options.getString('reason') || 'No reason provided';
 
     if (user.id === interaction.user.id) {
-      await interaction.reply({ content: "You can't timeout yourself.", ephemeral: true });
+      await interaction.reply({ content: "You can't timeout yourself.", flags: MessageFlags.Ephemeral });
       return;
     }
 
     const durationMs = parseDuration(durationInput);
     if (!durationMs) {
-      await interaction.reply({ content: 'Invalid duration. Use formats like 30m, 2h, or 1d.', ephemeral: true });
+      await interaction.reply({ content: 'Invalid duration. Use formats like 30m, 2h, or 1d.', flags: MessageFlags.Ephemeral });
       return;
     }
 
     if (durationMs > MAX_TIMEOUT_MS) {
-      await interaction.reply({ content: 'Duration exceeds Discord\'s 28 day timeout limit.', ephemeral: true });
+      await interaction.reply({ content: 'Duration exceeds Discord\'s 28 day timeout limit.', flags: MessageFlags.Ephemeral });
       return;
     }
 
     const member = await interaction.guild.members.fetch(user.id).catch(() => null);
     if (!member) {
-      await interaction.reply({ content: 'User not found in this server.', ephemeral: true });
+      await interaction.reply({ content: 'User not found in this server.', flags: MessageFlags.Ephemeral });
       return;
     }
 
     if (!member.moderatable) {
-      await interaction.reply({ content: 'I cannot timeout that member. They may have higher permissions or roles.', ephemeral: true });
+      await interaction.reply({ content: 'I cannot timeout that member. They may have higher permissions or roles.', flags: MessageFlags.Ephemeral });
       return;
     }
 
@@ -87,7 +87,7 @@ const command: Command = {
       },
     });
 
-    await interaction.reply({ content: `Timed out ${user.tag} for ${formatDuration(durationMs)}. Case #${caseEntry.id}.`, ephemeral: true });
+    await interaction.reply({ content: `Timed out ${user.tag} for ${formatDuration(durationMs)}. Case #${caseEntry.id}.`, flags: MessageFlags.Ephemeral });
 
     const embed = createActionEmbed({
       action: 'Timeout',

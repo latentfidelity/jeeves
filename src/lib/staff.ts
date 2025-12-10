@@ -1,6 +1,7 @@
 import {
   GuildMember,
   ChatInputCommandInteraction,
+  MessageFlags,
   PermissionFlagsBits,
   PermissionResolvable,
 } from 'discord.js';
@@ -64,7 +65,7 @@ export async function ensureStaff(
 ): Promise<boolean> {
   const member = interaction.member;
   if (!member || !(member as GuildMember).roles) {
-    await interaction.reply({ content: 'Unable to verify your roles.', ephemeral: true });
+    await interaction.reply({ content: 'Unable to verify your roles.', flags: MessageFlags.Ephemeral });
     return false;
   }
 
@@ -72,7 +73,7 @@ export async function ensureStaff(
   if (!hasStaffLevel(guildMember, required)) {
     await interaction.reply({
       content: `You need the ${roleNames[required]} role (or ${permissionFallbackLabels[required]}) to use this command.`,
-      ephemeral: true,
+      flags: MessageFlags.Ephemeral,
     });
     return false;
   }

@@ -1,4 +1,4 @@
-import { PermissionFlagsBits, SlashCommandBuilder } from 'discord.js';
+import { MessageFlags, PermissionFlagsBits, SlashCommandBuilder } from 'discord.js';
 import { addCase } from '../lib/caseStore';
 import { getAppealLink } from '../lib/appeal';
 import { tryNotifyUser } from '../lib/notify';
@@ -21,7 +21,7 @@ const command: Command = {
   requiredRole: 'moderator',
   async execute(interaction) {
     if (!interaction.guild) {
-      await interaction.reply({ content: 'This command can only be used in a server.', ephemeral: true });
+      await interaction.reply({ content: 'This command can only be used in a server.', flags: MessageFlags.Ephemeral });
       return;
     }
 
@@ -30,7 +30,7 @@ const command: Command = {
 
     const ban = await interaction.guild.bans.fetch(user.id).catch(() => null);
     if (!ban) {
-      await interaction.reply({ content: `${user.tag} is not banned.`, ephemeral: true });
+      await interaction.reply({ content: `${user.tag} is not banned.`, flags: MessageFlags.Ephemeral });
       return;
     }
 
@@ -55,7 +55,7 @@ const command: Command = {
       context: { dm: dmSent ? 'sent' : 'failed' },
     });
 
-    await interaction.reply({ content: `Unbanned ${user.tag}. Case #${caseEntry.id}.`, ephemeral: true });
+    await interaction.reply({ content: `Unbanned ${user.tag}. Case #${caseEntry.id}.`, flags: MessageFlags.Ephemeral });
 
     const embed = createActionEmbed({
       action: 'Unban',

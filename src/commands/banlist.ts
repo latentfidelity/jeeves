@@ -1,4 +1,4 @@
-import { PermissionFlagsBits, SlashCommandBuilder } from 'discord.js';
+import { MessageFlags, PermissionFlagsBits, SlashCommandBuilder } from 'discord.js';
 import { Command } from '../types/Command';
 
 const MAX_BANS_RETURNED = 10;
@@ -19,7 +19,7 @@ const command: Command = {
   requiredRole: 'moderator',
   async execute(interaction) {
     if (!interaction.guild) {
-      await interaction.reply({ content: 'This command can only be used in a server.', ephemeral: true });
+      await interaction.reply({ content: 'This command can only be used in a server.', flags: MessageFlags.Ephemeral });
       return;
     }
 
@@ -27,7 +27,7 @@ const command: Command = {
     const bans = await interaction.guild.bans.fetch();
 
     if (bans.size === 0) {
-      await interaction.reply({ content: 'No banned users found.', ephemeral: true });
+      await interaction.reply({ content: 'No banned users found.', flags: MessageFlags.Ephemeral });
       return;
     }
 
@@ -38,7 +38,7 @@ const command: Command = {
 
     await interaction.reply({
       content: `Bans (showing up to ${limit}):\n${description}`,
-      ephemeral: true,
+      flags: MessageFlags.Ephemeral,
     });
   },
 };

@@ -1,4 +1,4 @@
-import { Colors, EmbedBuilder, PermissionFlagsBits, SlashCommandBuilder } from 'discord.js';
+import { Colors, EmbedBuilder, MessageFlags, PermissionFlagsBits, SlashCommandBuilder } from 'discord.js';
 import { getInfractions } from '../lib/infractions';
 import { Command } from '../types/Command';
 
@@ -14,7 +14,7 @@ const command: Command = {
   requiredRole: 'moderator',
   async execute(interaction) {
     if (!interaction.guild) {
-      await interaction.reply({ content: 'This command can only be used in a server.', ephemeral: true });
+      await interaction.reply({ content: 'This command can only be used in a server.', flags: MessageFlags.Ephemeral });
       return;
     }
 
@@ -22,7 +22,7 @@ const command: Command = {
     const infractions = await getInfractions(interaction.guild.id, user.id);
 
     if (!infractions.length) {
-      await interaction.reply({ content: `${user.tag} has no recorded infractions.`, ephemeral: true });
+      await interaction.reply({ content: `${user.tag} has no recorded infractions.`, flags: MessageFlags.Ephemeral });
       return;
     }
 
@@ -37,7 +37,7 @@ const command: Command = {
         })),
       );
 
-    await interaction.reply({ embeds: [embed], ephemeral: true });
+    await interaction.reply({ embeds: [embed], flags: MessageFlags.Ephemeral });
   },
 };
 

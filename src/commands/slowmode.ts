@@ -1,4 +1,4 @@
-import { ChannelType, PermissionFlagsBits, SlashCommandBuilder, TextChannel, ThreadChannel } from 'discord.js';
+import { ChannelType, MessageFlags, PermissionFlagsBits, SlashCommandBuilder, TextChannel, ThreadChannel } from 'discord.js';
 import { addCase } from '../lib/caseStore';
 import { parseDuration } from '../lib/duration';
 import { createActionEmbed, sendModLog } from '../lib/modLog';
@@ -44,7 +44,7 @@ const command: Command = {
   requiredRole: 'moderator',
   async execute(interaction) {
     if (!interaction.guild) {
-      await interaction.reply({ content: 'This command can only be used in a server.', ephemeral: true });
+      await interaction.reply({ content: 'This command can only be used in a server.', flags: MessageFlags.Ephemeral });
       return;
     }
 
@@ -57,7 +57,7 @@ const command: Command = {
     const resetMs = resetAfterInput ? parseDuration(resetAfterInput) : null;
 
     if (!targetChannel || !isSlowmodeChannel(targetChannel)) {
-      await interaction.reply({ content: 'Slowmode can only be set on text channels or threads.', ephemeral: true });
+      await interaction.reply({ content: 'Slowmode can only be set on text channels or threads.', flags: MessageFlags.Ephemeral });
       return;
     }
 
@@ -66,19 +66,19 @@ const command: Command = {
     if (!disableKeywords.includes(durationInput)) {
       const ms = parseDuration(durationInput);
       if (!ms) {
-        await interaction.reply({ content: 'Invalid duration. Use values like 10s, 1m, 5m, or off.', ephemeral: true });
+        await interaction.reply({ content: 'Invalid duration. Use values like 10s, 1m, 5m, or off.', flags: MessageFlags.Ephemeral });
         return;
       }
       seconds = Math.floor(ms / 1000);
     }
 
     if (seconds > 21600) {
-      await interaction.reply({ content: 'Slowmode cannot exceed 6 hours.', ephemeral: true });
+      await interaction.reply({ content: 'Slowmode cannot exceed 6 hours.', flags: MessageFlags.Ephemeral });
       return;
     }
 
     if (resetAfterInput && !resetMs) {
-      await interaction.reply({ content: 'Invalid reset duration. Use values like 30m or 1h.', ephemeral: true });
+      await interaction.reply({ content: 'Invalid reset duration. Use values like 30m or 1h.', flags: MessageFlags.Ephemeral });
       return;
     }
 
@@ -104,7 +104,7 @@ const command: Command = {
       content: seconds === 0
         ? `Disabled slowmode in ${targetChannel}. Case #${caseEntry.id}.`
         : `Set slowmode in ${targetChannel} to ${seconds}s. Case #${caseEntry.id}.`,
-      ephemeral: true,
+      flags: MessageFlags.Ephemeral,
     });
 
     const extraFields = [

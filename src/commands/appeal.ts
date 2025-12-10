@@ -1,4 +1,4 @@
-import { Colors, EmbedBuilder, PermissionFlagsBits, SlashCommandBuilder } from 'discord.js';
+import { Colors, EmbedBuilder, MessageFlags, PermissionFlagsBits, SlashCommandBuilder } from 'discord.js';
 import { setAppealLink, getAppealLink } from '../lib/appeal';
 import { Command } from '../types/Command';
 
@@ -31,7 +31,7 @@ const command: Command = {
   requiredRole: 'moderator',
   async execute(interaction) {
     if (!interaction.guild) {
-      await interaction.reply({ content: 'This command can only be used in a server.', ephemeral: true });
+      await interaction.reply({ content: 'This command can only be used in a server.', flags: MessageFlags.Ephemeral });
       return;
     }
 
@@ -39,7 +39,7 @@ const command: Command = {
 
     if (sub === 'set') {
       if (!interaction.memberPermissions?.has(PermissionFlagsBits.ModerateMembers)) {
-        await interaction.reply({ content: 'You lack permission to set the appeal link.', ephemeral: true });
+        await interaction.reply({ content: 'You lack permission to set the appeal link.', flags: MessageFlags.Ephemeral });
         return;
       }
 
@@ -49,7 +49,7 @@ const command: Command = {
 
       await interaction.reply({
         content: `Updated appeal link to ${url} (${label}).`,
-        ephemeral: true,
+        flags: MessageFlags.Ephemeral,
       });
       return;
     }
@@ -57,7 +57,7 @@ const command: Command = {
     if (sub === 'get') {
       const link = await getAppealLink(interaction.guild.id);
       if (!link) {
-        await interaction.reply({ content: 'No appeal link has been set for this server.', ephemeral: true });
+        await interaction.reply({ content: 'No appeal link has been set for this server.', flags: MessageFlags.Ephemeral });
         return;
       }
 
@@ -69,11 +69,11 @@ const command: Command = {
         .setFooter({ text: 'Updated' })
         .setTimestamp(link.updatedAt);
 
-      await interaction.reply({ embeds: [embed], ephemeral: true });
+      await interaction.reply({ embeds: [embed], flags: MessageFlags.Ephemeral });
       return;
     }
 
-    await interaction.reply({ content: 'Unknown subcommand.', ephemeral: true });
+    await interaction.reply({ content: 'Unknown subcommand.', flags: MessageFlags.Ephemeral });
   },
 };
 

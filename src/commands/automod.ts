@@ -1,4 +1,4 @@
-import { PermissionFlagsBits, SlashCommandBuilder } from 'discord.js';
+import { MessageFlags, PermissionFlagsBits, SlashCommandBuilder } from 'discord.js';
 import { addRule, AutomodAction, AutomodType, listRules, removeRule } from '../lib/automodStore';
 import { parseDuration } from '../lib/duration';
 import { Command } from '../types/Command';
@@ -62,7 +62,7 @@ const command: Command = {
   requiredRole: 'administrator',
   async execute(interaction) {
     if (!interaction.guild) {
-      await interaction.reply({ content: 'This command can only be used in a server.', ephemeral: true });
+      await interaction.reply({ content: 'This command can only be used in a server.', flags: MessageFlags.Ephemeral });
       return;
     }
 
@@ -76,19 +76,19 @@ const command: Command = {
       const timeoutInput = interaction.options.getString('timeout') || undefined;
 
       if (type === 'keyword' && !pattern) {
-        await interaction.reply({ content: 'Pattern is required for keyword rules.', ephemeral: true });
+        await interaction.reply({ content: 'Pattern is required for keyword rules.', flags: MessageFlags.Ephemeral });
         return;
       }
 
       let timeoutMs: number | undefined;
       if (action === 'timeout') {
         if (!timeoutInput) {
-          await interaction.reply({ content: 'Timeout duration is required when action=timeout.', ephemeral: true });
+          await interaction.reply({ content: 'Timeout duration is required when action=timeout.', flags: MessageFlags.Ephemeral });
           return;
         }
         timeoutMs = parseDuration(timeoutInput) || undefined;
         if (!timeoutMs) {
-          await interaction.reply({ content: 'Invalid timeout duration. Use values like 10m or 1h.', ephemeral: true });
+          await interaction.reply({ content: 'Invalid timeout duration. Use values like 10m or 1h.', flags: MessageFlags.Ephemeral });
           return;
         }
       }
@@ -96,7 +96,7 @@ const command: Command = {
       const rule = await addRule(interaction.guild.id, { type, pattern, action, timeoutMs, reason });
       await interaction.reply({
         content: `Added automod rule \`${rule.id}\` (${rule.type} -> ${rule.action}).`,
-        ephemeral: true,
+        flags: MessageFlags.Ephemeral,
       });
       return;
     }
@@ -104,7 +104,7 @@ const command: Command = {
     if (sub === 'list') {
       const rules = await listRules(interaction.guild.id);
       if (!rules.length) {
-        await interaction.reply({ content: 'No automod rules configured.', ephemeral: true });
+        await interaction.reply({ content: 'No automod rules configured.', flags: MessageFlags.Ephemeral });
         return;
       }
 
@@ -117,7 +117,7 @@ const command: Command = {
         )
         .join('\n');
 
-      await interaction.reply({ content: description, ephemeral: true });
+      await interaction.reply({ content: description, flags: MessageFlags.Ephemeral });
       return;
     }
 
@@ -125,14 +125,14 @@ const command: Command = {
       const id = interaction.options.getString('id', true);
       const removed = await removeRule(interaction.guild.id, id);
       if (!removed) {
-        await interaction.reply({ content: `No rule found with ID ${id}.`, ephemeral: true });
+        await interaction.reply({ content: `No rule found with ID ${id}.`, flags: MessageFlags.Ephemeral });
         return;
       }
-      await interaction.reply({ content: `Removed automod rule ${id}.`, ephemeral: true });
+      await interaction.reply({ content: `Removed automod rule ${id}.`, flags: MessageFlags.Ephemeral });
       return;
     }
 
-    await interaction.reply({ content: 'Unknown subcommand.', ephemeral: true });
+    await interaction.reply({ content: 'Unknown subcommand.', flags: MessageFlags.Ephemeral });
   },
 };
 

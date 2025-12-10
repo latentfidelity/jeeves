@@ -1,4 +1,4 @@
-import { PermissionFlagsBits, Role, SlashCommandBuilder } from 'discord.js';
+import { MessageFlags, PermissionFlagsBits, Role, SlashCommandBuilder } from 'discord.js';
 import { addCase } from '../lib/caseStore';
 import { parseDuration, formatDuration } from '../lib/duration';
 import { scheduleRoleRemoval } from '../lib/scheduler';
@@ -29,7 +29,7 @@ const command: Command = {
   requiredRole: 'moderator',
   async execute(interaction) {
     if (!interaction.guild) {
-      await interaction.reply({ content: 'This command can only be used in a server.', ephemeral: true });
+      await interaction.reply({ content: 'This command can only be used in a server.', flags: MessageFlags.Ephemeral });
       return;
     }
 
@@ -40,23 +40,23 @@ const command: Command = {
 
     const durationMs = parseDuration(durationInput);
     if (!durationMs) {
-      await interaction.reply({ content: 'Invalid duration. Use values like 30m or 2h.', ephemeral: true });
+      await interaction.reply({ content: 'Invalid duration. Use values like 30m or 2h.', flags: MessageFlags.Ephemeral });
       return;
     }
 
     const member = await interaction.guild.members.fetch(user.id).catch(() => null);
     if (!member) {
-      await interaction.reply({ content: 'User not found in this server.', ephemeral: true });
+      await interaction.reply({ content: 'User not found in this server.', flags: MessageFlags.Ephemeral });
       return;
     }
 
     if (!member.manageable) {
-      await interaction.reply({ content: 'I cannot modify that member. They may have higher permissions or roles.', ephemeral: true });
+      await interaction.reply({ content: 'I cannot modify that member. They may have higher permissions or roles.', flags: MessageFlags.Ephemeral });
       return;
     }
 
     if (!role.editable) {
-      await interaction.reply({ content: 'I cannot assign that role. It may be higher than my highest role or managed.', ephemeral: true });
+      await interaction.reply({ content: 'I cannot assign that role. It may be higher than my highest role or managed.', flags: MessageFlags.Ephemeral });
       return;
     }
 
@@ -75,7 +75,7 @@ const command: Command = {
 
     await interaction.reply({
       content: `Assigned ${role.name} to ${user.tag} for ${formatDuration(durationMs)}. Case #${caseEntry.id}.`,
-      ephemeral: true,
+      flags: MessageFlags.Ephemeral,
     });
 
     const embed = createActionEmbed({
