@@ -1,8 +1,28 @@
 import { MessageFlags, SlashCommandBuilder } from 'discord.js';
+import { appendFile, mkdir } from 'fs/promises';
+import { join } from 'path';
 import { Command } from '../types/Command';
 import config from '../config';
 import { runOpenRouterChat } from '../lib/openrouter';
 import { getCredits, deductCredits } from '../lib/creditStore';
+
+const LOG_PATH = join(process.cwd(), 'data', 'ask.log');
+
+async function logAsk(entry: {
+  timestamp: string;
+  guild: string;
+  user: string;
+  userTag: string;
+  model: string;
+  prompt: string;
+  response: string;
+  credits: number;
+  tokens: number;
+}) {
+  await mkdir(join(process.cwd(), 'data'), { recursive: true });
+  const line = `[${entry.timestamp}] [${entry.guild}] ${entry.userTag} (${entry.user}) | model=${entry.model} | credits=${entry.credits} | tokens=${entry.tokens}\n  Q: ${entry.prompt.replace(/\n/g, ' ')}\n  A: ${entry.response.replace(/\n/g, ' ').slice(0, 500)}${entry.response.length > 500 ? '...' : ''}\n`;
+  await appendFile(LOG_PATH, line);
+}
 
 // Models that are free (no credits required)
 const FREE_MODELS = new Set([
@@ -124,6 +144,19 @@ const command: Command = {
       const reply = `**Q:** ${prompt}\n\n**A:** ${result.content}\n\n-# ${modelDisplay} · ${creditInfo}${balanceInfo} · ${result.tokens.total} tokens`;
 
       await interaction.editReply(reply);
+
+      // Log the ask
+      logAsk({
+        timestamp: new Date().toISOString(),
+        guild: interaction.guild.name,
+        user: userId,
+        userTag: interaction.user.tag,
+        model: result.model,
+        prompt,
+        response: result.content,
+        credits: result.credits,
+        tokens: result.tokens.total,
+      }).catch((err) => console.error('Failed to log ask:', err));
     } catch (error) {
       console.error('OpenRouter chat failed', error);
       await interaction.editReply('OpenRouter request failed. Please try again later.');
