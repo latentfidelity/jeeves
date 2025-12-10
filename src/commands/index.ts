@@ -8,11 +8,13 @@ import kick from './kick';
 import lockdown from './lockdown';
 import reason from './reason';
 import diagnostics from './diagnostics';
+import guide from './guide';
 import help from './help';
 import report from './report';
 import backup from './backup';
 import configCommand from './config';
 import ask from './ask';
+import credits from './credits';
 import automod from './automod';
 import say from './say';
 import note from './note';
@@ -46,10 +48,12 @@ const commands: Command[] = [
   lockdown,
   reason,
   diagnostics,
+  guide,
   help,
   backup,
   configCommand,
   ask,
+  credits,
   automod,
   say,
   report,
