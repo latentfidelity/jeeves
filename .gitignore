@@ -14,3 +14,4 @@ data/schedule.json
 data/jeeves.db
 data/*.log
 data/credits.json
+data/chat.json

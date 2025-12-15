@@ -37,6 +37,7 @@ import appeal from './appeal';
 import infractions from './infractions';
 import history from './history';
 import temprole from './temprole';
+import chat from './chat';
 
 const commands: Command[] = [
   ban,
@@ -77,6 +78,7 @@ const commands: Command[] = [
   infractions,
   history,
   temprole,
+  chat,
 ];
 
 export default commands;
