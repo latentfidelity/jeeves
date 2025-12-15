@@ -1,0 +1,21 @@
+# fly.toml app configuration file generated for jeeves-discord-bot on 2025-12-14T21:18:08-08:00
+#
+# See https://fly.io/docs/reference/configuration/ for information about how to use this file.
+#
+
+app = 'jeeves-discord-bot'
+primary_region = 'iad'
+
+[build]
+
+[env]
+  NODE_ENV = 'production'
+
+[[mounts]]
+  source = 'jeeves_data'
+  destination = '/app/data'
+
+[[vm]]
+  cpu_kind = 'shared'
+  cpus = 1
+  memory_mb = 256

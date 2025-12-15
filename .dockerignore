@@ -1,0 +1,30 @@
+# Dependencies
+node_modules
+
+# Build output (rebuilt in container)
+dist
+
+# Development files
+*.log
+.env
+.env.*
+
+# Data directory (mounted as volume)
+data
+
+# Git
+.git
+.gitignore
+
+# IDE
+.vscode
+.idea
+*.swp
+*.swo
+
+# Documentation
+*.md
+LICENSE
+
+# Fly.io
+fly.toml
