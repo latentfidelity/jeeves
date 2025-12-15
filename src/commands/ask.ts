@@ -8,6 +8,18 @@ import { getCredits, deductCredits } from '../lib/creditStore';
 
 const LOG_PATH = join(process.cwd(), 'data', 'ask.log');
 
+// ANSI color codes
+const c = {
+  reset: '\x1b[0m',
+  dim: '\x1b[2m',
+  bold: '\x1b[1m',
+  red: '\x1b[31m',
+  green: '\x1b[32m',
+  yellow: '\x1b[33m',
+  cyan: '\x1b[36m',
+  magenta: '\x1b[35m',
+};
+
 async function logAsk(entry: {
   timestamp: string;
   guild: string;
@@ -20,7 +32,12 @@ async function logAsk(entry: {
   tokens: number;
 }) {
   await mkdir(join(process.cwd(), 'data'), { recursive: true });
-  const line = `[${entry.timestamp}] [${entry.guild}] ${entry.userTag} (${entry.user}) | model=${entry.model} | credits=${entry.credits} | tokens=${entry.tokens}\n  Q: ${entry.prompt.replace(/\n/g, ' ')}\n  A: ${entry.response.replace(/\n/g, ' ').slice(0, 500)}${entry.response.length > 500 ? '...' : ''}\n`;
+  const creditColor = entry.credits === 0 ? c.green : c.red;
+  const line =
+    `${c.dim}[${entry.timestamp}]${c.reset} ${c.cyan}[${entry.guild}]${c.reset} ${c.yellow}${entry.userTag}${c.reset} ${c.dim}(${entry.user})${c.reset}\n` +
+    `  ${c.magenta}model=${c.reset}${entry.model} ${creditColor}credits=${entry.credits}${c.reset} ${c.dim}tokens=${entry.tokens}${c.reset}\n` +
+    `  ${c.bold}Q:${c.reset} ${entry.prompt.replace(/\n/g, ' ')}\n` +
+    `  ${c.bold}A:${c.reset} ${entry.response.replace(/\n/g, ' ').slice(0, 500)}${entry.response.length > 500 ? '...' : ''}\n\n`;
   await appendFile(LOG_PATH, line);
 }
 
