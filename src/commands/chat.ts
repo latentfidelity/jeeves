@@ -51,6 +51,19 @@ const command: Command = {
     )
     .addSubcommand((sub) => sub.setName('disable').setDescription('Disable chat mode'))
     .addSubcommand((sub) => sub.setName('status').setDescription('Show current chat configuration'))
+    .addSubcommand((sub) =>
+      sub
+        .setName('chance')
+        .setDescription('Update the reply chance percentage')
+        .addIntegerOption((opt) =>
+          opt
+            .setName('percent')
+            .setDescription('Percentage chance to reply (1-100)')
+            .setMinValue(1)
+            .setMaxValue(100)
+            .setRequired(true),
+        ),
+    )
     .setDefaultMemberPermissions(PermissionFlagsBits.ManageGuild)
     .setDMPermission(false),
 
@@ -100,6 +113,21 @@ const command: Command = {
           `Channel: <#${chatConfig.channelId}>\n` +
           `Model: ${modelDisplay}\n` +
           `Reply chance: ${chatConfig.chance}%`,
+        flags: MessageFlags.Ephemeral,
+      });
+    } else if (subcommand === 'chance') {
+      const chatConfig = await getChatConfig(guildId);
+
+      if (!chatConfig || !chatConfig.enabled) {
+        await interaction.reply({ content: 'Chat mode is not enabled. Use `/chat enable` first.', flags: MessageFlags.Ephemeral });
+        return;
+      }
+
+      const newChance = interaction.options.getInteger('percent', true);
+      await setChatConfig(guildId, { ...chatConfig, chance: newChance });
+
+      await interaction.reply({
+        content: `Reply chance updated to **${newChance}%**`,
         flags: MessageFlags.Ephemeral,
       });
     }
