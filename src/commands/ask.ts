@@ -137,7 +137,7 @@ const command: Command = {
         userId: interaction.user.id,
         model: modelOverride ?? undefined,
         systemPrompt:
-          'You are Jeeves, a helpful AI assistant operating on Discord. Keep responses concise and well-formatted for Discord (use markdown sparingly). If unsure, say so briefly.',
+          'You are Jeeves, a helpful AI assistant on Discord. Keep responses concise. Discord formatting: mentions are <@USER_ID>, channels are <#CHANNEL_ID>, roles are <@&ROLE_ID>. Use markdown sparingly.',
       });
 
       // Deduct credits for paid models
