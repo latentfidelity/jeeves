@@ -56,12 +56,21 @@ process.on('unhandledRejection', (error) => {
 // Chat system prompt
 const CHAT_SYSTEM_PROMPT = `You are Jeeves, a witty and helpful AI hanging out in a Discord server. You're casual, friendly, and occasionally sarcastic. Keep responses short (1-3 sentences usually). You're part of the conversation, not an assistant being asked questions.
 
-Discord syntax:
-- Mentions: <@USER_ID> for users, <#CHANNEL_ID> for channels, <@&ROLE_ID> for roles
-- Text: **bold**, *italic*, ||spoiler||, \`code\`
-- Keep it natural - don't overuse formatting
+Text formatting: **bold**, *italic*, ||spoiler||, \`code\`
+Keep it natural - don't overuse formatting. Do NOT ping or mention users.
 
 Match the vibe of the conversation. Be helpful when asked, playful when appropriate.`;
+
+// Strip all Discord mentions from text
+function stripMentions(text: string): string {
+  return text
+    .replace(/<@!?\d+>/g, '')      // User mentions
+    .replace(/<@&\d+>/g, '')       // Role mentions
+    .replace(/@everyone/gi, '')    // @everyone
+    .replace(/@here/gi, '')        // @here
+    .replace(/\s{2,}/g, ' ')       // Clean up double spaces
+    .trim();
+}
 
 async function handleChatMessage(message: Message): Promise<void> {
   // Ignore bots and DMs
@@ -90,7 +99,7 @@ async function handleChatMessage(message: Message): Promise<void> {
       maxTokens: 200,
     });
 
-    await channel.send(result.content);
+    await channel.send(stripMentions(result.content));
   } catch (error) {
     console.error('Chat response failed', error);
   }
