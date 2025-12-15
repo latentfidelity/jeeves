@@ -12,3 +12,5 @@ data/config.json
 data/automod.json
 data/schedule.json
 data/jeeves.db
+data/*.log
+data/credits.json
