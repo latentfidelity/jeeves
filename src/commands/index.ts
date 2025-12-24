@@ -38,6 +38,7 @@ import infractions from './infractions';
 import history from './history';
 import temprole from './temprole';
 import chat from './chat';
+import image from './image';
 
 const commands: Command[] = [
   ban,
@@ -79,6 +80,7 @@ const commands: Command[] = [
   history,
   temprole,
   chat,
+  image,
 ];
 
 export default commands;
