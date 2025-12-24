@@ -1,6 +1,6 @@
 # Jeeves — Coding Agent Notes
 
-See [../CLAUDE.md](../CLAUDE.md) for full architecture documentation.
+See [CLAUDE.md](CLAUDE.md) for full architecture documentation.
 
 ## Quick Reference
 
@@ -16,4 +16,4 @@ npm run build && npm start # Production
 - Never commit secrets (`.env`, tokens, API keys)
 - Treat `data/` as user state: keep formats backward-compatible
 - Run `deploy:commands` after modifying slash command options
-- Commands must be added to `src/commands/index.ts` to be active
+
