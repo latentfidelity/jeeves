@@ -13,9 +13,20 @@ export type ImageModel = {
 
 // Base cost: 1 credit = $0.0001. Margin multiplier applied at runtime.
 export const IMAGE_MODELS: ImageModel[] = [
+  // FLUX.1 models
   { id: 'fal-ai/flux/schnell', name: 'FLUX.1 Schnell', defaultSize: { width: 1024, height: 1024 }, credits: 30 },
   { id: 'fal-ai/flux/dev', name: 'FLUX.1 Dev', defaultSize: { width: 1024, height: 1024 }, credits: 250 },
   { id: 'fal-ai/flux-pro/v1.1', name: 'FLUX Pro 1.1', defaultSize: { width: 1024, height: 1024 }, credits: 500 },
+  // FLUX.2 models
+  { id: 'fal-ai/flux-2', name: 'FLUX.2 Dev', defaultSize: { width: 1024, height: 1024 }, credits: 120 },
+  { id: 'fal-ai/flux-2-pro', name: 'FLUX.2 Pro', defaultSize: { width: 1024, height: 1024 }, credits: 300 },
+  { id: 'fal-ai/flux-2-flex', name: 'FLUX.2 Flex', defaultSize: { width: 1024, height: 1024 }, credits: 600 },
+  // Google Nano Banana
+  { id: 'fal-ai/nano-banana', name: 'Nano Banana', defaultSize: { width: 1024, height: 1024 }, credits: 400 },
+  { id: 'fal-ai/nano-banana-pro', name: 'Nano Banana Pro', defaultSize: { width: 1024, height: 1024 }, credits: 1500 },
+  // Fast models
+  { id: 'fal-ai/z-image/turbo', name: 'Z-Image Turbo', defaultSize: { width: 1024, height: 1024 }, credits: 50 },
+  // Other models
   { id: 'fal-ai/stable-diffusion-v3-medium', name: 'SD3 Medium', defaultSize: { width: 1024, height: 1024 }, credits: 350 },
   { id: 'fal-ai/recraft-v3', name: 'Recraft V3', defaultSize: { width: 1024, height: 1024 }, credits: 400 },
 ];
