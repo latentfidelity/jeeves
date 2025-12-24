@@ -69,8 +69,9 @@ export type ChatOptions = {
 
 function calculateCredits(model: string, promptTokens: number, completionTokens: number): number {
   const pricing = MODEL_PRICING[model] || { prompt: 10, completion: 30 }; // Default to moderate pricing
-  // Credits per 1K tokens, so divide by 1000
-  return Math.ceil((promptTokens * pricing.prompt + completionTokens * pricing.completion) / 1000);
+  // Credits per 1K tokens, so divide by 1000, then apply margin multiplier
+  const baseCost = (promptTokens * pricing.prompt + completionTokens * pricing.completion) / 1000;
+  return Math.ceil(baseCost * config.creditMargin);
 }
 
 export async function runOpenRouterChat(prompt: string, options?: ChatOptions): Promise<ChatResult> {
