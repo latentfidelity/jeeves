@@ -13,6 +13,12 @@ export type FalConfig = {
   apiKey?: string;
 };
 
+export type StripeConfig = {
+  secretKey?: string;
+  webhookSecret?: string;
+  webhookPort: number;
+};
+
 export type BotConfig = {
   token: string;
   clientId: string;
@@ -20,6 +26,7 @@ export type BotConfig = {
   modLogChannelId?: string;
   openRouter: OpenRouterConfig;
   fal: FalConfig;
+  stripe: StripeConfig;
   creditMargin: number; // Multiplier for credit costs (1.0 = break-even, 1.5 = 50% margin)
 };
 
@@ -46,6 +53,12 @@ const fal: FalConfig = {
   apiKey: process.env.FAL_API_KEY,
 };
 
+const stripe: StripeConfig = {
+  secretKey: process.env.STRIPE_SECRET_KEY,
+  webhookSecret: process.env.STRIPE_WEBHOOK_SECRET,
+  webhookPort: parseInt(process.env.STRIPE_WEBHOOK_PORT || '3000', 10),
+};
+
 // Credit margin: 1.0 = break-even, 1.5 = 50% profit margin, 2.0 = 100% margin
 const creditMargin = parseFloat(process.env.CREDIT_MARGIN || '1.5');
 
@@ -56,6 +69,7 @@ const config: BotConfig = {
   modLogChannelId: process.env.MOD_LOG_CHANNEL_ID,
   openRouter,
   fal,
+  stripe,
   creditMargin: isNaN(creditMargin) ? 1.5 : creditMargin,
 };
 

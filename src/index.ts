@@ -1,4 +1,15 @@
-import { Client, Events, GatewayIntentBits, MessageFlags, Message, TextChannel } from 'discord.js';
+import {
+  ActionRowBuilder,
+  ButtonBuilder,
+  ButtonStyle,
+  Client,
+  EmbedBuilder,
+  Events,
+  GatewayIntentBits,
+  Message,
+  MessageFlags,
+  TextChannel,
+} from 'discord.js';
 import commands from './commands';
 import config from './config';
 import { handleAutomodMessage } from './lib/automod';
@@ -6,6 +17,8 @@ import { initScheduler } from './lib/scheduler';
 import { ensureStaff } from './lib/staff';
 import { getChatConfig } from './lib/chatStore';
 import { runOpenRouterChat } from './lib/openrouter';
+import { initWebhookServer } from './lib/webhook';
+import { getStripe, PRICING_TIERS } from './lib/stripe';
 
 const client = new Client({
   intents: [
@@ -21,9 +34,94 @@ const commandMap = new Map(commands.map((command) => [command.data.name, command
 client.once(Events.ClientReady, (readyClient) => {
   console.log(`Jeeves is online as ${readyClient.user.tag}`);
   initScheduler(client);
+  initWebhookServer(client);
 });
 
 client.on(Events.InteractionCreate, async (interaction) => {
+  // Handle buy select menu
+  if (interaction.isStringSelectMenu() && interaction.customId === 'buy_select') {
+    const tierId = interaction.values[0];
+    const tier = PRICING_TIERS.find((t) => t.id === tierId);
+
+    if (!tier || !interaction.guild) {
+      await interaction.reply({
+        content: 'Invalid selection.',
+        flags: MessageFlags.Ephemeral,
+      });
+      return;
+    }
+
+    await interaction.deferUpdate();
+
+    try {
+      const stripe = getStripe();
+      const session = await stripe.checkout.sessions.create({
+        payment_method_types: ['card'],
+        line_items: [
+          {
+            price_data: {
+              currency: 'usd',
+              product_data: {
+                name: `${tier.name} Subscription`,
+                description: `${tier.totalMonthlyCredits.toLocaleString()} AI credits per month`,
+              },
+              unit_amount: tier.priceUsd,
+              recurring: {
+                interval: 'month',
+              },
+            },
+            quantity: 1,
+          },
+        ],
+        mode: 'subscription',
+        success_url: 'https://discord.com/channels/@me',
+        cancel_url: 'https://discord.com/channels/@me',
+        metadata: {
+          guildId: interaction.guild.id,
+          userId: interaction.user.id,
+          tierId: tier.id,
+        },
+        subscription_data: {
+          metadata: {
+            guildId: interaction.guild.id,
+            userId: interaction.user.id,
+            tierId: tier.id,
+          },
+        },
+        expires_at: Math.floor(Date.now() / 1000) + 30 * 60,
+      });
+
+      const embed = new EmbedBuilder()
+        .setTitle(`Subscribe to ${tier.name}`)
+        .setDescription(
+          `**${tier.totalMonthlyCredits.toLocaleString()}** credits/month for **$${(tier.priceUsd / 100).toFixed(2)}/mo**\n\n` +
+            'Click the button below to complete your subscription.\n' +
+            'The link expires in 30 minutes.',
+        )
+        .setColor(0x5865f2);
+
+      const button = new ButtonBuilder()
+        .setLabel('Subscribe Now')
+        .setStyle(ButtonStyle.Link)
+        .setURL(session.url!);
+
+      const row = new ActionRowBuilder<ButtonBuilder>().addComponents(button);
+
+      await interaction.editReply({
+        embeds: [embed],
+        components: [row],
+      });
+    } catch (error) {
+      console.error('Failed to create checkout session', error);
+      await interaction.editReply({
+        content: 'Failed to create checkout session. Please try again.',
+        embeds: [],
+        components: [],
+      });
+    }
+    return;
+  }
+
   if (!interaction.isChatInputCommand()) return;
   const command = commandMap.get(interaction.commandName);
 

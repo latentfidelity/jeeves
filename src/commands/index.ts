@@ -39,6 +39,7 @@ import history from './history';
 import temprole from './temprole';
 import chat from './chat';
 import image from './image';
+import buy from './buy';
 
 const commands: Command[] = [
   ban,
@@ -81,6 +82,7 @@ const commands: Command[] = [
   temprole,
   chat,
   image,
+  buy,
 ];
 
 export default commands;
