@@ -43,26 +43,30 @@ async function logAsk(entry: {
 
 // Models that are free (no credits required)
 const FREE_MODELS = new Set([
+  'openrouter/free',
   'meta-llama/llama-3.3-70b-instruct:free',
   'meta-llama/llama-3.2-3b-instruct:free',
-  'google/gemini-2.0-flash-exp:free',
   'google/gemma-3-27b-it:free',
+  'google/gemma-3-12b-it:free',
   'mistralai/mistral-small-3.1-24b-instruct:free',
-  'mistralai/mistral-7b-instruct:free',
-  'qwen/qwen3-235b-a22b:free',
+  'nousresearch/hermes-3-llama-3.1-405b:free',
+  'nvidia/nemotron-3-super-120b-a12b:free',
+  'openai/gpt-oss-120b:free',
+  'qwen/qwen3-coder:free',
 ]);
 
 const MAX_PROMPT_LENGTH = 800;
 
 // Popular OpenRouter models - curated list
 const MODEL_CHOICES = [
+  { name: 'Auto (best free)', value: 'openrouter/free' },
   { name: 'Llama 3.3 70B (free)', value: 'meta-llama/llama-3.3-70b-instruct:free' },
-  { name: 'Llama 3.2 3B (free)', value: 'meta-llama/llama-3.2-3b-instruct:free' },
-  { name: 'Gemini 2.0 Flash (free)', value: 'google/gemini-2.0-flash-exp:free' },
   { name: 'Gemma 3 27B (free)', value: 'google/gemma-3-27b-it:free' },
+  { name: 'Hermes 3 405B (free)', value: 'nousresearch/hermes-3-llama-3.1-405b:free' },
+  { name: 'Nemotron Super 120B (free)', value: 'nvidia/nemotron-3-super-120b-a12b:free' },
+  { name: 'GPT-OSS 120B (free)', value: 'openai/gpt-oss-120b:free' },
   { name: 'Mistral Small 3.1 (free)', value: 'mistralai/mistral-small-3.1-24b-instruct:free' },
-  { name: 'Mistral 7B (free)', value: 'mistralai/mistral-7b-instruct:free' },
-  { name: 'Qwen 3 235B (free)', value: 'qwen/qwen3-235b-a22b:free' },
+  { name: 'Qwen3 Coder 480B (free)', value: 'qwen/qwen3-coder:free' },
   { name: 'GPT-4o Mini', value: 'openai/gpt-4o-mini' },
   { name: 'GPT-4o', value: 'openai/gpt-4o' },
   { name: 'Claude 3.5 Sonnet', value: 'anthropic/claude-3.5-sonnet' },
@@ -151,10 +155,11 @@ Discord syntax:
 Use formatting purposefully, not excessively.`,
       });
 
-      // Deduct credits for paid models
+      // Free models never cost credits, even if the router resolves to an unknown model
+      const actualCredits = isFreeModel ? 0 : result.credits;
       let remainingCredits: number | null = null;
-      if (result.credits > 0) {
-        const deduction = await deductCredits(guildId, userId, result.credits);
+      if (actualCredits > 0) {
+        const deduction = await deductCredits(guildId, userId, actualCredits);
         remainingCredits = deduction.remaining;
       }
 
@@ -163,9 +168,9 @@ Use formatting purposefully, not excessively.`,
 
       // Build response with credit info
       const creditInfo =
-        result.credits === 0
+        actualCredits === 0
           ? '`FREE`'
-          : `\`-${result.credits} credits\``;
+          : `\`-${actualCredits} credits\``;
 
       const balanceInfo = remainingCredits !== null ? ` · ${remainingCredits} remaining` : '';
 
@@ -182,7 +187,7 @@ Use formatting purposefully, not excessively.`,
         model: result.model,
         prompt,
         response: result.content,
-        credits: result.credits,
+        credits: actualCredits,
         tokens: result.tokens.total,
       }).catch((err) => console.error('Failed to log ask:', err));
     } catch (error) {
