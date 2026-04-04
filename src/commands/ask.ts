@@ -53,6 +53,7 @@ const FREE_MODELS = new Set([
   'nvidia/nemotron-3-super-120b-a12b:free',
   'openai/gpt-oss-120b:free',
   'qwen/qwen3-coder:free',
+  'qwen/qwen3.6-plus:free',
 ]);
 
 const MAX_PROMPT_LENGTH = 800;
@@ -60,18 +61,27 @@ const MAX_PROMPT_LENGTH = 800;
 // Popular OpenRouter models - curated list
 const MODEL_CHOICES = [
   { name: 'Auto (best free)', value: 'openrouter/free' },
+  { name: 'Qwen 3.6 Plus (free)', value: 'qwen/qwen3.6-plus:free' },
   { name: 'Llama 3.3 70B (free)', value: 'meta-llama/llama-3.3-70b-instruct:free' },
-  { name: 'Gemma 3 27B (free)', value: 'google/gemma-3-27b-it:free' },
   { name: 'Hermes 3 405B (free)', value: 'nousresearch/hermes-3-llama-3.1-405b:free' },
   { name: 'Nemotron Super 120B (free)', value: 'nvidia/nemotron-3-super-120b-a12b:free' },
+  { name: 'Qwen3 Coder (free)', value: 'qwen/qwen3-coder:free' },
   { name: 'GPT-OSS 120B (free)', value: 'openai/gpt-oss-120b:free' },
+  { name: 'Gemma 3 27B (free)', value: 'google/gemma-3-27b-it:free' },
   { name: 'Mistral Small 3.1 (free)', value: 'mistralai/mistral-small-3.1-24b-instruct:free' },
-  { name: 'Qwen3 Coder 480B (free)', value: 'qwen/qwen3-coder:free' },
-  { name: 'GPT-4o Mini', value: 'openai/gpt-4o-mini' },
-  { name: 'GPT-4o', value: 'openai/gpt-4o' },
   { name: 'Claude 3.5 Sonnet', value: 'anthropic/claude-3.5-sonnet' },
-  { name: 'Claude 3 Haiku', value: 'anthropic/claude-3-haiku' },
+  { name: 'Claude 3 Opus', value: 'anthropic/claude-3-opus' },
+  { name: 'Claude 3.5 Haiku', value: 'anthropic/claude-3-5-haiku' },
+  { name: 'GPT-4o', value: 'openai/gpt-4o' },
+  { name: 'OpenAI o1', value: 'openai/o1' },
+  { name: 'OpenAI o3-mini', value: 'openai/o3-mini' },
   { name: 'DeepSeek V3', value: 'deepseek/deepseek-chat' },
+  { name: 'DeepSeek R1', value: 'deepseek/deepseek-r1' },
+  { name: 'Grok 2', value: 'x-ai/grok-2-1212' },
+  { name: 'Gemini 2.0 Flash', value: 'google/gemini-2.0-flash-001' },
+  { name: 'Gemini 1.5 Pro', value: 'google/gemini-1.5-pro' },
+  { name: 'Llama 3.1 405B', value: 'meta-llama/llama-3.1-405b-instruct' },
+  { name: 'GPT-4o Mini', value: 'openai/gpt-4o-mini' },
 ] as const;
 
 const command: Command = {

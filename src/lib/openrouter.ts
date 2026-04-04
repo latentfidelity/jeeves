@@ -9,17 +9,27 @@ const MODEL_PRICING: Record<string, { prompt: number; completion: number }> = {
   // Free models
   'meta-llama/llama-3.3-70b-instruct:free': { prompt: 0, completion: 0 },
   'meta-llama/llama-3.2-3b-instruct:free': { prompt: 0, completion: 0 },
-  'google/gemini-2.0-flash-exp:free': { prompt: 0, completion: 0 },
   'google/gemma-3-27b-it:free': { prompt: 0, completion: 0 },
   'mistralai/mistral-small-3.1-24b-instruct:free': { prompt: 0, completion: 0 },
-  'mistralai/mistral-7b-instruct:free': { prompt: 0, completion: 0 },
-  'qwen/qwen3-235b-a22b:free': { prompt: 0, completion: 0 },
+  'nvidia/nemotron-3-super-120b-a12b:free': { prompt: 0, completion: 0 },
+  'nousresearch/hermes-3-llama-3.1-405b:free': { prompt: 0, completion: 0 },
+  'qwen/qwen3.6-plus:free': { prompt: 0, completion: 0 },
+  'openai/gpt-oss-120b:free': { prompt: 0, completion: 0 },
   // Paid models (credits per 1K tokens: $/token * 1000 * 10000)
-  'openai/gpt-4o-mini': { prompt: 1.5, completion: 6 }, // $0.15/$0.60 per 1M
-  'openai/gpt-4o': { prompt: 25, completion: 100 }, // $2.50/$10 per 1M
-  'anthropic/claude-3.5-sonnet': { prompt: 30, completion: 150 }, // $3/$15 per 1M
-  'anthropic/claude-3-haiku': { prompt: 2.5, completion: 12.5 }, // $0.25/$1.25 per 1M
-  'deepseek/deepseek-chat': { prompt: 3, completion: 12 }, // $0.30/$1.20 per 1M
+  'openai/gpt-4o-mini': { prompt: 1.5, completion: 6 },
+  'openai/gpt-4o': { prompt: 25, completion: 100 },
+  'openai/o1': { prompt: 150, completion: 600 },
+  'openai/o3-mini': { prompt: 11, completion: 44 },
+  'anthropic/claude-3.5-sonnet': { prompt: 30, completion: 150 },
+  'anthropic/claude-3-opus': { prompt: 150, completion: 750 },
+  'anthropic/claude-3-5-haiku': { prompt: 8, completion: 40 },
+  'anthropic/claude-3-haiku': { prompt: 2.5, completion: 12.5 },
+  'deepseek/deepseek-chat': { prompt: 1.4, completion: 2.8 },
+  'deepseek/deepseek-r1': { prompt: 5.5, completion: 21.9 },
+  'x-ai/grok-2-1212': { prompt: 20, completion: 100 },
+  'google/gemini-2.0-flash-001': { prompt: 1, completion: 4 },
+  'google/gemini-1.5-pro': { prompt: 12.5, completion: 50 },
+  'meta-llama/llama-3.1-405b-instruct': { prompt: 30, completion: 30 },
 };
 
 type ChatMessage = {
